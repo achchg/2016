@@ -1,0 +1,310 @@
+---
+title: "Distributions and basic exploratory data analysis"
+output: pdf_document
+---
+
+```{r,echo=FALSE, warning=FALSE}
+fixheight <- function(x){
+  y <- strsplit(x, "'")
+  ret <- sapply(y, function(z){
+    ifelse( length(z)>1, as.numeric(z[1])*12 + as.numeric(z[2]) ,
+            as.numeric(z[1]))
+  })
+  return(ret)
+}
+
+suppressMessages(library(dplyr))
+suppressMessages(library(readr))
+url <- "https://raw.githubusercontent.com/datasciencelabs/data/master/bio260-heights.csv"
+dat <- read_csv(url)
+names(dat) <- c("time","gender","height")
+dat <- mutate(dat,height=gsub("ft","'",height) ) %>%  mutate(height= gsub("\"|inches|\ ","",height) ) %>% mutate(height=fixheight(height)) 
+```
+
+
+Assessment: Read in the data [here]("https://raw.githubusercontent.com/datasciencelabs/data/master/bio260-heights.csv"). Use the `filter` function to determine how many males and females we have.
+
+Assessment: Use filter and select to obtain a `data.frame` with just male heights. How many NAs do we have when we convert them to numeric?
+
+
+## Exploratory Data Analysis
+
+An indispensable part of data wrangling is exploratory data analysis. In particular with large dataset, it is practically impossible to examine the data from potential errors by looking at tables. Here we describe some simple  visualization techniques that are quite powerful for summarizing data and identifying potential errors.
+
+## Distributions
+
+The most basic statistical summary of a list of numbers is it's distribution. The simplest way to think of a *distribution* is as a compact description of many numbers. For example, we have measured the heights of all students in a course. Imagine you need to describe these numbers to someone that has no idea what these heights are, such as an alien that has never visited Earth. 
+
+One approach to summarizing these numbers is to simply list them all out for the alien to see. Here are 10 randomly selected heights :
+
+```{r}
+select(dat, height) %>% print(n=10)
+```
+
+#### Cumulative Distribution Function
+
+Scanning through these numbers, we start to get a rough idea of what the entire list looks like, but it is certainly inefficient. We can quickly improve on this approach by defining and visualizing a _distribution_. To define a distribution we compute, for all possible values of $a$, the proportion of numbers in our list that are below $a$. We use the following notation:
+
+$$ F(a) \equiv \mbox{Pr}(x \leq a) $$
+
+This is called the cumulative distribution function (CDF). When the CDF is derived from data, as opposed to theoretically, we also call it the empirical CDF (ECDF). The ECDF for the adult male height data looks like this:
+
+```{r ecdf,fig.cap="Empirical cummulative distribution function for height.", echo=FALSE}
+data(father.son,package="UsingR")
+x <- father.son$sheight
+smallest <- floor( min(x) )
+largest <- ceiling( max(x) )
+values <- seq(smallest, largest,len=300)
+heightecdf <- ecdf(x)
+plot(values, heightecdf(values), type="l",
+     xlab="a (Height in inches)",ylab="Pr(x <= a)")
+```
+
+## Histograms
+
+Although the empirical CDF concept is widely discussed in statistics textbooks, the plot is actually not very popular in practice. The reason is that histograms give us the same information and are easier to interpret. Histograms show us the
+proportion of values in intervals: 
+
+$$ \mbox{Pr}(a \leq x \leq b) = F(b) - F(a) $$
+
+Plotting these heights as bars is what we call a _histogram_. It is a
+more useful plot because we are usually more interested in intervals,
+such and such percent are between 70 inches and 71 inches, etc.,
+rather than the percent less than a particular height.
+It is also easier to distinguish different types (families) of distributions
+by looking at histograms. Here is a histogram for the general population:
+
+```{r}
+data(father.son,package="UsingR")
+x <- father.son$sheight
+hist(x)
+```
+
+Here is a histogram for our class:
+
+```{r hist}
+hist(dat$height)
+```
+
+
+## Outliers
+
+The plot has revealed another problem. We have a number hieghts that are larger than 96 inches and shorter than 12 inches. Let's view the data for which this is the case. To do this we introduce the or logical operator `|`
+
+```{r}
+filter(dat, height>96 | height < 12) %>% select(original)
+```
+
+We see several heights that appear to be in centimeters. We will go ahead and assume this is the case and make the convertion:
+
+```{r}
+dat <- mutate(dat, height=ifelse(height>96, height/2.54, height))
+```
+
+Now let's see what outliers remain:
+```{r}
+filter(dat, height>96 | height < 12) %>% select(height)
+```
+
+These values appear to use the format $x.y$ with $x$ feet and $y$ inches. Note that these are not numbers. In particualr note that $5.11$ is larger than $5.5$. We also not a particularly strange entry which we will just assume is $5.5$:
+```{r}
+dat <- mutate(dat, height=ifelse(height==5.51, 65, height))
+```
+
+For the rest we convert to inches using the functions `floor`. This approach does not work for `5.11` so we treat that differently:
+
+```{r}
+dat <- mutate(dat, height=ifelse(height==5.11, 71, height))
+dat <- mutate(dat, height=ifelse(height>12, height, floor(height)*12+(height-floor(height))*10))
+```
+
+Let's confirm that we have removed all the outliers:
+```{r}
+filter(dat, height>96 | height < 12) %>% select(height)
+```
+
+The histogram looks more like the general population now
+```{r}
+hist(dat$height)
+```
+
+Although not quite the same.
+
+Assessment. Wrange the data as we did in class. You can obtain the function to fix heights from [here](https://github.com/datasciencelabs/2016/blob/master/lectures/R_for_Data_Science/fixheight.R)
+
+What is the height of the 113th entry ?
+
+## Normal Distribution
+
+The histogram provides an excellent summary plot of a distribution. Can we summarize even further? We often see the average and standard deviation used as summary statistics. To understand why these are so widely used we need to undertand the normla distribution.
+
+The bell curve, also known as the normal distribution or Gaussian distribution is commonly found in nature. There are reasons for this which we will explain later. 
+
+When the histogram of a list of numbers is said to be approximated by the normal distribution, it means we can use a convenient mathematical formula to approximate the proportion of values or outcomes in any given interval:
+
+$$
+\mbox{Pr}(a < x < b) = \int_a^b \frac{1}{\sqrt{2\pi\sigma^2}} \exp{\left( \frac{-(x-\mu)^2}{2 \sigma^2} \right)} \, dx
+$$
+
+While the formula may look intimidating, don't worry, you will never
+actually have to type it out, as it is stored in a more convenient
+form (as `pnorm` in R which sets *a* to $-\infty$, and takes *b* as an argument). 
+
+Note that if this distribution approximates our data, then we only need to know the average $\mu$ and the standard deviation $\sigma$ to describe the entire population. 
+
+If we denote the values in our list as $x_1,\dots,x_n$. 
+The mean:
+
+$$\mu = \frac{1}{n}\sum_{i=1}^n x_i $$
+
+The variance:
+
+$$\sigma^2 = \frac{1}{n}\sum_{i=1}^n (x_i-\mu_X)^2 $$
+
+with the standard deviation being the square root of the variance. 
+
+If we have a vector in R we can use the following functions:
+
+```{r}
+x <- father.son$sheight
+mu <- mean(x)
+sigma <- sqrt( mean( (x - mu)^2) )
+```
+
+If in fact, the normal distribution is a good approximation we should be able to obtain approximations of the proportion in any range. For exmaple, how many men are taller than six feet? 
+
+We can obtain the exact answer like this:
+```{r}
+sum( x> 6*12 ) / length(x)
+##which is equivalent to
+mean( x>6*12)
+```
+
+How good is the normal approximation?
+
+```{r}
+1 - pnorm( 6*12, mu, sigma )
+```
+
+We can try other values and see that we get very good approximations. Once we know the US adult men have an average height of 69 inches and standard deviation of 3 inches, we know everything: two numbers are all we need to describe the distribution.
+
+Asssessment: If a list of numbers has a distribution that is well approximated by the normal distribution, what proportion of these numbers are within one standard deviation away from the list’s average?
+
+
+### Standard units
+
+Once we know that a list of numbers follow the normal distribution, a convinent way to describe a value is the number of standard deviations away from the average. We say these values are in _standard units_:
+
+```{r}
+z <- (x - mu)/sigma
+```
+
+So, for example, a male seven footer is 5 SDs away from the average. 
+
+If the original distribtuion is approximately normal, then these values will have a _standard normal_ distribution: average 0 and standard deviation 1. Notice that about 95\% of the values are within two standard deviation of the average:
+
+```{r}
+pnorm(2)-pnorm(-2)
+```
+and most values are within 3
+```{r}
+pnorm(3)-pnorm(-3)
+```
+
+
+Assessment: Use the normal approximation to determine what proportion of US men are as tall or taller as Michael Jordan? 
+
+
+Assessment: In the US, how many more 6'6 or taller men are there than 7 foot or taller? Compute a proportion.
+
+Assessment:  What proportion of 7 footers (in the world) are in the NBA? Hint: There are 36 7 footers in the NBA. Hint 2: The average height of men 18-35 is  68.5 and SD 3 inches and is approximately normal?
+
+## Quantile Quantile Plots
+
+To corroborate that a theoretical distribution, for example the normal distribution, is in fact a good
+approximation, we can use quantile-quantile plots
+(qq-plots). Quantiles are best understood by considering the special
+case of percentiles. The p-th percentile of a list of a distribution
+is defined as the number q that is bigger than p% of numbers (so the inverse of
+the cumulative distribution function we defined earlier). For
+example, the median 50-th percentile is the median.
+We can compute the percentiles for male heights and for the normal distribution:
+
+```{r qqplot_example1, fig.cap="First example of qqplot. Here we compute the theoretical quantiles ourselves."}
+ps <- ( seq(0,99) + 0.5 )/100 
+qs <- quantile(x, ps)
+normalqs <- qnorm(ps, mu, sigma)
+plot(normalqs,qs,xlab="Normal percentiles",ylab="Height percentiles")
+abline(0,1) ##identity line
+```
+
+Note how close these values are. Also, note that we can see these
+qq-plots with less code (this plot has more points than the one we
+constructed manually, and so tail-behavior can be seen more clearly).
+
+```{r qqplot_example2, fig.cap="Second example of qqplot. Here we use the function qqnorm which computes the theoretical normal quantiles automatically."}
+qqnorm(x)
+qqline(x)
+```
+
+However, the `qqnorm` function plots against a standard normal distribution. This is why the line has slope $\sigma$ and intercept $\mu$.
+
+```{r}
+qqnorm(dat$height)
+qqline(dat$height)
+```
+
+We can split it into the two genders and see slighlty better fits (excpet for the tails)
+
+```{r}
+men <- filter(dat, gender=="Male")
+qqnorm(men$height)
+qqline(men$height)
+
+women <- filter(dat, gender=="Female")
+qqnorm(women$height)
+qqline(women$height)
+```
+
+Assessment In our empirical distribution of heights, how many men are taller tha Micael Jordan? Why the discrepency with our answer above?
+
+
+## Boxplots
+
+Data is not always normally distributed. Income is a widely cited
+example. In these cases, the average and standard deviation are not
+necessarily informative since one can't infer the distribution from
+just these two numbers. The properties described above are specific to
+the normal. For example, the normal distribution does not seem to be a
+good approximation for the direct compensation for 199 United States
+CEOs in the year 2000.
+
+```{r execpay, fig.width=10.5, fig.height=5.25, fig.cap="Histogram and QQ-plot of executive pay."}
+data(exec.pay,package="UsingR")
+hist(exec.pay) 
+qqnorm(exec.pay)
+qqline(exec.pay)
+```
+
+In addition to qq-plots, a practical summary of data is to compute 3
+percentiles: 25-th, 50-th (the median) and the 75-th. A boxplot shows
+these 3 values along with a 
+range of the points within median $\pm$ 1.5 (75-th percentile -
+25th-percentile). Values outside this range are shown as points and
+sometimes refereed to as _outliers_. 
+
+```{r fig.width=6, fig.height=6, fig.cap="Simple boxplot of executive pay."}
+boxplot(exec.pay)
+```
+
+Here we show just one boxplot.
+However, one of the great benefits of boxplots is that we could easily
+show many distributions in one plot, by lining them up, side by side. 
+
+Here are the distribution of men and women heights from our class
+
+```{r}
+boxplot( women$height, men$height )
+```
+
+
