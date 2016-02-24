@@ -487,3 +487,30 @@ Throughout this book, we use random number generators. This implies that many of
 ```{r,eval=FALSE}
 ?set.seed
 ```
+
+```{r}
+N = 400
+x = -1/19
+sd = 2*sqrt(10/19*9/19)
+simulation = 10000
+error = replicate(simulation, {
+  X = sample( c(-1,1), N, replace = TRUE, prob=c(10/19, 9/19)) 
+  mean(X) - x})
+hist(error)
+mean(error)
+sqrt(mean(error^2))
+sd/sqrt(N)
+```
+
+```{r}
+z = error/(sd/sqrt(N))
+qqnorm(z)
+abline(0,1)
+```
+
+```{r}
+# error = mu-sd
+mu = 0
+
+```
+
