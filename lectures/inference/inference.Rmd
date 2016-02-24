@@ -1,6 +1,6 @@
 ---
 title: "Inference"
-output: pdf_document
+output: html_document
 ---
 
 # Inference 
@@ -526,7 +526,7 @@ mean(earn>0)
 ```
 
 ```{r}
-1-((0-x)/(sd/sqrt(N))) = 0.001
+# 1-((0-x)/(sd/sqrt(N))) = 0.001
 n = (qnorm(0.999)*(sd/(-x)))^2
 round(n)
 N = n
@@ -559,6 +559,29 @@ pnorm(sqrt(n)/sd(y))-pnorm(-sqrt(n)/sd(y))
 ```
 
 ```{r}
+set.seed(2016)
+N = 100
+prob_heads = sample(c(0.5,0.6,0.4),1)
+p = sample(c(1,0), N, replace = T,
+       prob = c(prob_heads,(1-prob_heads)))
+mean(p)
+
+```
+
+```{r}
+se = mean(p)*(1-mean(p))/sqrt(N)
+ci = c(mean(p)-qnorm(0.975)*se, mean(p)+qnorm(0.975)*se)
+```
+
+```{r}
+N = 100
+a = replicate(10000,{ 
+  p = sample(c(1,0), N, replace = T,
+         prob = c(prob_heads,(1-prob_heads)))
+  se = sqrt(mean(p)*(1-mean(p))/N)
+  ci = mean(p)+c(-1,1)*qnorm(0.975)*se
+  prob_heads>ci[1] & prob_heads<ci[2]
+  })
 
 ```
 
