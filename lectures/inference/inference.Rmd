@@ -509,8 +509,56 @@ abline(0,1)
 ```
 
 ```{r}
-# error = mu-sd
-mu = 0
+# error = x - mu
+0 - x
+
+```
+
+```{r}
+1 - pnorm((0 - x)/(sd/sqrt(N)))
+simulation = 10000
+p0 = 10/19
+N = 400
+earn = replicate(simulation, {
+  X = sample( c(-1,1), N, replace = TRUE, prob=c(10/19, 9/19)) 
+  sum(X)})
+mean(earn>0)
+```
+
+```{r}
+1-((0-x)/(sd/sqrt(N))) = 0.001
+n = (qnorm(0.999)*(sd/(-x)))^2
+round(n)
+N = n
+
+earn = replicate(simulation, {
+  X = sample( c(-1,1), N, replace = TRUE, prob=c(10/19, 9/19)) 
+  sum(X)})
+mean(earn>0)
+
+```
+
+```{r}
+data(father.son,package="UsingR")
+y <- father.son$sheight
+mean(y)
+sd(y)
+```
+
+```{r}
+n = length(s)
+s = sample(y, 25)
+mean(s)
+sd(s)/sqrt(n)
+```
+
+```{r}
+1-pnorm(-1/(sd(y)/sqrt(n)))*2
+
+pnorm(sqrt(n)/sd(y))-pnorm(-sqrt(n)/sd(y))
+```
+
+```{r}
 
 ```
 
