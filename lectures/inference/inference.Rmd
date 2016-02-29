@@ -702,6 +702,9 @@ Assessment:
 Suppose you are comparing average test scores from two school districts. You have exams from a random sample of 10000. The p-value for the difference in average scores is 0.01. Should we change the curriculum of the district with highly significant statistical differences? 
 
 
+```{r}
+Yes
+```
 
 
 

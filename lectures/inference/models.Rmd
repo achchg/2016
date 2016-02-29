@@ -37,6 +37,22 @@ This is a contrived example, but it will help us understand how we think about m
 
 If we are betting on black on roulette, we can let $Y_i$ be either -1 or 1. Now what is $\theta$ and what is the distribution of our error? What is the standard deviation of the errors? Hint: the expected value of the error must be 0.
 
+```{r}
+#theta is the expected value of Y:
+B = 100000
+theta = -1/19
+Y = sample(c(-1,1), B, replace = T, prob = c(10/19, 9/19))
+error = Y - theta
+prop.table(table(error))
+
+# MSE
+sqrt(mean(error^2))
+
+# se
+2*sqrt(10/19*9/19)
+```
+
+
 #### Assessment 2: http://goo.gl/forms/XLQQh69MUO
 
 Let's consider the example of a demographer trying to estimate the average height of a population. We use the heights stored in R:
@@ -55,9 +71,30 @@ Y <- sample(y, 25, replace = TRUE)
 
 What are $\theta$, $N$, and $\varepsilon_1$ ?
 
+```{r}
+theta = mean(y)
+N = 25
+error_1 = Y[1]-theta
+error_1
+```
+
+
+
 #### Assessment 3: http://goo.gl/forms/CfamwJBctA
 
 Note that in this example each individual in the population has an _error_. It may sound a bit strange but, if you are 1 inch taller than the average height, we call it an "error" of 1 inch. Compute all the errors for the population and explore the distribution. What is the standard deviation of this distribution?
+
+```{r}
+theta = mean(y)
+error = y-mean(y)
+error
+hist(error)
+
+sigma = sqrt(mean(error^2))
+qqnorm(error/sigma)
+abline(0,1)
+```
+
 
 A) Exactly normal with $\sigma$ of about 3 inches
 
@@ -101,18 +138,38 @@ So we can write a model:
 
 $$Y_i = \theta + \varepsilon_i, i=1, \dots, N$$
 
-with $N=22$.
+with $N=27$.
 
 #### Assessment 4: http://goo.gl/forms/iyXi76a4b0
 
 Using the CLT theory we have learned, how do we model $\varepsilon$, what is the expected value and standard deviation of 
 $\varepsilon$? 
 
+```{r}
+# expected value of epsilon
+0
+
+# sd of epsilon: sqrt(theta*(1-theta)/N) by CLT
+sqrt(0.534*(1-0.534)/100) 
+# sd of epsilon empirical from our data:
+sd(tab$estimate/100)
+
+```
+
 
 #### Assessment 5: http://goo.gl/forms/0sYp0gFnxZ
 
 We already revealed that $\theta = 0.534$. Use this information and 
 data exploration to check if the model assumptions make sense. 
+```{r}
+theta = 0.534
+Y = tab$estimate/100
+error = Y - theta
+hist(error)
+sigma = sqrt(mean(error^2))
+qqnorm(error/sigma)
+abline(0,1)
+```
 
 
 
@@ -147,6 +204,7 @@ We can compare this empirical approach to the more theoretical approach we have 
 
 ```{r}
 theta <- mean(y)
+Y = tab$estimate
 sd(Y) ##compared to 
 sqrt(theta*(1-theta))/sqrt(100) ##or to
 theta_hat <- mean(Y)
@@ -303,11 +361,29 @@ with $N=22$.
 
 Using the CLT theory we have learned, how do we model $\varepsilon$, what is the expected value and standard deviation of 
 $\varepsilon$? 
+```{r}
+# expected value of epsilon ~ Normal(0,variance)
+0
 
+# sd of epsilon: sqrt(theta*(1-theta)/N) by CLT (theta is a proportion here)
+
+
+```
 
 #### Assessment 7: http://goo.gl/forms/ZAbd1crfK3
 
 Use data exploration to check if the model assumptions make sense. Note that we have the benefit of hindsight. The election night result was $\theta = 52.9 - 45.7 = 7.2$. 
+
+```{r}
+Y = filter(tab, N == 800)$diff
+theta = 7.2/100
+error = Y - theta
+hist(error)
+se = 2*sqrt(theta*(1-theta)/800)
+qqnorm(error/se)
+abline(0,1)
+```
+
 
 A. The data are approximately normal with the expected value and standard error as predicted.
 
@@ -337,6 +413,12 @@ Use ggplot to make a plot of the estimated difference versus day. What do you ob
 
 
 The SD is at least 5%
+
+```{r}
+library(ggplot2)
+theme_set()
+```
+
 
 #### Assessment 9: http://goo.gl/forms/9q5SSXk6iM
 
