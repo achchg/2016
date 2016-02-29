@@ -688,7 +688,13 @@ So we do in fact have reason to be a skeptics. By constructing a p-value we see 
 
 
 Assessment:
-If $\hat{p}=51$ and $N=10000$. What is the p-value?
+If $\hat{p}=0.51$ and $N=10000$. What is the p-value?
+```{r}
+N=10000
+z <- sqrt(N)*(0.51-0.5)/0.5
+1 - (pnorm(z) - pnorm(-z))
+```
+
 
 We can show that if a $x \times 100\%$ confidence interval does not include 0, then the p-value must be smaller than $1-x$. So they provide related information. However, the confidence interval is always more informative as it gives information of the size of the estimate. 
 
