@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 .DS_Store
 homework/.DS_Store
 =======
@@ -7,3 +8,7 @@ homework/.DS_Store
 *.Rproj
 >>>>>>> course/master
 
+=======
+*.DS_Store
+*.Rhistory
+>>>>>>> 57db770d808e3c14b86ca2583ce65219c44ec289
