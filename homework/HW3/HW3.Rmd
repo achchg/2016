@@ -135,7 +135,7 @@ Hint: `race2016$survey_house` has the information you need.
 ```
 
 
-## Problem 2
+# Problem 2
 
 We now have a table with all the information we need. We will now use 
 the results from Iowa, New Hampshire, Nevada and South Carolina 
@@ -144,7 +144,7 @@ to determine how to create a prediction for upcoming primaries.
 ## Problem 2A 
 
 Use an internet search to determine the results for the Iowa, 
-New Hampshire, Nevada and South Carolina primaries for the top three
+New Hampshire, Nevada and South Carolina primaries for the top two
 candidates. Create a table called `actual` with this information. 
 Also, create a column with the actual election difference.
 Use a join function to add this information to our `results` table. 
@@ -209,7 +209,7 @@ impacts accuracy.
 ```
 
 
-# Problem 2F
+## Problem 2F
 
 For polls from IA, NH, and SC, aggregate all polls from within 1 week of the 
 election (use the `start_date` to determine cutoff) to provide a 
@@ -287,11 +287,11 @@ Trump beating Rubio in Florida.
 ```
 
 
-## Problem 4
+# Problem 4
 
 Use the poll data as well as the results from Super Tuesday (March 1st) and other election results that happen before the deadline to make predictions for each remaining primary. Then use these results to estimate the probability of Trump winning the republican nomination. Justify your answer with figures, statistical arguments, and Monte Carlo simulations.
 
-It will help to learn about how delegates are assigned. Here is [the manual](http://www.scribd.com/doc/294928557/2016-Presidential-Nominating-Process-Book-version-2-0-Dec-2015-pdf)
+It will help to learn about how delegates are assigned. Here is [the manual].(http://www.scribd.com/doc/294928557/2016-Presidential-Nominating-Process-Book-version-2-0-Dec-2015-pdf)
 
 
 
