@@ -87,46 +87,9 @@ c(x,test):
 Simulation
 ===
 
-```{r,echo=FALSE,fig.height=7,fig.width=11}
-set.seed(3)
-prev <- 1/20
-acc <- 0.90
-N <- 20; M <- 80
-x<-rbinom(N*M,1,p=prev)
-cols <- c("grey","red")
-people <- expand.grid(1:M,N:1)
-people2 <- expand.grid(1:(M/2),N:1)
-cols1 <- cols[x+1]
-cols2 <- rep(NA,length(cols1));count2<-1
-cols3 <- rep(NA,length(cols1));count3<-1
-rafalib::mypar()
-layout(matrix(c(1,2,1,3),2,2))
- plot(people,col=cols1,pch=16,xaxt="n",yaxt="n",xlab="",ylab="",main=paste0("Population: ",round(mean(x)*100),"% are red"))
-axis(side=1,M/2,"O",col="black",tick=FALSE,cex.axis=2,line=1.5)
-plot(people2,type="n",pch=16,xaxt="n",yaxt="n",xlab="",ylab="",main="Tested Positive")
-plot(people2,type="n",pch=16,xaxt="n",yaxt="n",xlab="",ylab="",main="Tested Negative")
+![plot of chunk unnamed-chunk-1](bayes-figure/unnamed-chunk-1-1.png)
 
-```
 
-```{r,eval=FALSE,include=FALSE}
-library(animation)
-file.remove("/Users/ririzarr/myDocuments/teaching/cs109/2014_working/lectures/lecture14/bayes.gif")
-saveGIF({
-i=1
-while(count3<=(N*M/2) & count2<=(N*M/2)){
-  test <- sample(100,1);min=round(100*acc)
-  rafalib::mypar2()
-  layout(matrix(c(1,2,1,3),2,2))
-  plot(people,col=cols1,pch=16,xaxt="n",yaxt="n",xlab="",ylab="",main=paste0("Population: ",round(mean(x)*100),"% are red"))
-  if(test>min) axis(side=1,M/2,"X",col="red",tick=FALSE,cex.axis=3,line=1.5) else axis(side=1,M/2,"O",col="black",tick=FALSE,cex.axis=2,line=1.5)
-  points(people[i,],pch=1,cex=1.5)
-  if(all(is.na(cols2))) plot(people2,type="n",pch=16,xaxt="n",yaxt="n",xlab="",ylab="",main="Tested Positive") else plot(people2,col=cols2,pch=16,xaxt="n",yaxt="n",xlab="",ylab="",main=paste0("Tested Positive: ",round(mean(cols2=="red",na.rm=TRUE)*100),"% are red"))
-  if(all(is.na(cols3))) plot(people2,type="n",pch=16,xaxt="n",yaxt="n",xlab="",ylab="",main="Tested Negative") else plot(people2,col=cols3,pch=16,xaxt="n",yaxt="n",xlab="",ylab="",main=paste0("Tested Negative: ",round(mean(cols3=="red",na.rm=TRUE)*100,1),"% are red"))
-  outcome <- ifelse(x[i]==1, as.numeric(test<=min), as.numeric(test>min))
-  if(outcome==0) {cols3[count3]<-cols1[i];count3<-count3+1} else {cols2[count2]<-cols1[i];count2<-count2+1}
-  i<-i+1
-}},'bayes.gif', interval = .1, ani.width = 800, ani.height = 500,outdir="/Users/ririzarr/myDocuments/teaching/cs109/2014_working/lectures/lecture14")
-```
 
 Simulation
 ====
@@ -168,22 +131,12 @@ Distribution of AVG
 ===
 This is for all players (>500 AB) 2010, 2011, 2012
 
-```{r,fig.align="center",echo=FALSE,fig.width=14,fig.height=6}
-library(Lahman)
-library(dplyr)
-library(ggplot2)
-theme_set(theme_bw(base_size = 24))
-Batting %>% 
-  filter(yearID%in%2012:2014 & AB>500)  %>%
-  mutate(AVG=H/AB*1000) %>% 
-  ggplot(aes(AVG)) +
-  geom_histogram(bins=9) + 
-  facet_grid(.~yearID)
-```
+<img src="bayes-figure/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
 
 Average is about 275 and SD is about 27
 ====
-```{r}
+
+```r
 options(digits = 3)
 filter(Batting, yearID%in%2011:2014 & AB>500) %>%
   mutate(AVG=H/AB*1000) %>%
@@ -191,16 +144,21 @@ filter(Batting, yearID%in%2011:2014 & AB>500) %>%
   summarize(mean(AVG), sd(AVG))
 ```
 
+```
+Source: local data frame [4 x 3]
+
+  yearID mean(AVG) sd(AVG)
+   (int)     (dbl)   (dbl)
+1   2011       275    28.9
+2   2012       274    28.0
+3   2013       275    27.0
+4   2014       273    26.0
+```
+
 And the distribution appears Normal
 ====
 
-```{r,fig.align="center",cache=TRUE,echo=FALSE,fig.width=14,fig.height=6}
-filter(Batting, yearID%in%2012:2014 & AB>500) %>%
-  mutate(AVG=H/AB*1000) %>% 
-  ggplot(aes(sample=(AVG-mean(AVG))/sd(AVG)))+
-  geom_qq() + geom_abline(slope=1,intercept = 0) +
-  facet_grid(.~yearID)
-```
+<img src="bayes-figure/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
 
 
 Hierarchical Model
