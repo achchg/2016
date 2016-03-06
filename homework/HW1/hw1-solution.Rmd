@@ -1,7 +1,7 @@
 ---
-title: "Homework 1: Insights on Poverty"
+title: 'Homework 1: Insights on Poverty'
+output: pdf_document
 date: "February 4, 2016"
-output: html_document
 ---
  
 **This homework is due Sunday February 14, 2016 at 11:59 PM. When complete, submit your code in the R Markdown file and the knitted HTML file on Canvas.**
@@ -37,7 +37,7 @@ We will use the following datasets:
 5.     [Total GDP](http://spreadsheets.google.com/pub?key=pyj6tScZqmEfI4sLVvEQtHw&output=csv)
 
 Create five `tbl_df` table objects, one for each of the tables provided in the above files. Hints: Use the `read_csv` function. Because these are only temporary files, give them short names.
-```{r,include=FALSE}
+```{r,include = T}
 library(tidyr)
 library(dplyr)
 library(readr)
