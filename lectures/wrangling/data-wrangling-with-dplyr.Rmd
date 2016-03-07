@@ -1,6 +1,7 @@
 ---
-title: Data Wrangling with `dplyr` 
-author: Stephanie Hicks, Rafael Irizarry
+title: "Data Wrangling with `dplyr`"
+author: "Stephanie Hicks, Rafael Irizarry"
+output: pdf_document
 ---
 
 Once data has been transformed into a **tidy** tabular format, an 

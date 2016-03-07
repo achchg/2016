@@ -1,6 +1,7 @@
 ---
-title: Data Wrangling with `tidyr` 
-author: Stephanie Hicks, Rafael Irizarry
+title: "Data Wrangling with `tidyr`"
+author: "Stephanie Hicks, Rafael Irizarry"
+output: pdf_document
 ---
 
 The data analysis process can be thought about in four parts

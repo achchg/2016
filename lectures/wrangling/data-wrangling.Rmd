@@ -1,6 +1,6 @@
 ---
 title: "Data Wrangling"
-output: html_document
+output: pdf_document
 ---
 
 ## Data Wrangling
