@@ -136,6 +136,11 @@ McCain in the 2008 presidential election?
 
 ```
 
+```{r}
+mu = -0.15
+tau = 5
+1-pnorm((0-(-0.15))/5)
+```
 
 ### Observed data (sampling distribution)
 
@@ -261,6 +266,13 @@ the statistical theory from the CLT).
 
 ```
 
+```{r}
+tab %>%
+  filter(end_date < "2008-01-01") %>%
+  mutate(diff = Obama - McCain) %>%
+  summarize(theta = mean(diff), sd = sd(diff))
+```
+
 Last week, we also a scatter plot showing the number of polls 
 (y-axis) for each week (x-axis). 
 
@@ -281,6 +293,14 @@ at least five or more polls in a given week.
 ```{r}
 ##Your code here.
 
+```
+
+```{r}
+tab %>%
+  group_by(week) %>%
+  filter(n()>5) %>%
+  summarize(num_polls=n()) %>%
+    ggplot(aes(week, num_polls)) + geom_point()
 ```
 
 #### Assessment 
@@ -306,6 +326,17 @@ mean and standard deviation.
 
 ```
 
+```{r}
+tabEst = tab %>%
+  filter(start_date > "2008-01-01" & week <= -30) %>%
+  mutate(diff = Obama - McCain)%>%
+  group_by(week) %>%
+  filter(n()>5) %>%
+  ungroup %>%
+  summarize(theta_hat = mean(diff), sigma_hat = sd(diff), tot_poll = n())
+  
+```
+
 
 #### Assessment 
 Use the Central Limit Theorem to construct 
@@ -315,6 +346,10 @@ approach to estimate the standard deviation $\sigma$.
 ```{r}
 ##Your code here
 
+```
+
+```{r}
+tabEst$theta_hat + qnorm(0.975)*c(-1,1)*tabEst$sigma_hat/sqrt(tabEst$tot_poll)
 ```
 
 #### Assessment
@@ -329,6 +364,9 @@ the 2008 presidential election?
 
 ```
 
+```{r}
+pnorm((0.012390655-tabEst$theta_hat)/tabEst$sigma_hat)-pnorm((-0.009339808-tabEst$theta_hat)/tabEst$sigma_hat)
+```
 
 #### Compare the empirical estimate $\sigma$ to the theoretical estimate of $\sigma$ using Central Limit Theorem
 
@@ -367,6 +405,13 @@ theory from the CLT.
 ```{r}
 ##Your code here.
 
+```
+
+```{r}
+tab %>%
+  mutate(diff = Obama - McCain) %>%
+  filter(week > -5 & N==1000) %>%
+  summarize(theta = mean(diff), sigma = 2*sqrt(theta*(1-theta)/1000))
 ```
 
 
