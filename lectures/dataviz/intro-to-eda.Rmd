@@ -92,7 +92,8 @@ hist(dat$height)
 The plot has revealed another problem. We have a number hieghts that are larger than 96 inches and shorter than 12 inches. Let's view the data for which this is the case. To do this we introduce the or logical operator `|`
 
 ```{r}
-filter(dat, height>96 | height < 12) %>% select(original)
+filter(dat, height>96 | height < 12) 
+# %>% select(original)
 ```
 
 We see several heights that appear to be in centimeters. We will go ahead and assume this is the case and make the convertion:

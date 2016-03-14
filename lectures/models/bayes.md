@@ -66,6 +66,9 @@ Assessment: Write a Monte Carlo simulation that shows this. Let's go step-by-ste
 * Repeat 10,000
 * Compute TP / P = TP / (TP +FP)
 
+
+
+```r
 B = 1000000
 res = replicate(B,{
 x = sample(c(0,1),1, replace = T, prob = c(1-1/4000, 1/4000))
@@ -73,6 +76,7 @@ test = sample(c(1-x, x), 1, replace = TRUE, prob = c(0.01 , 0.99))
 c(x,test)
 } 
 )
+```
 
 table(res[1,], res[2,])
 sum(res[2,] == 1 & res[1,] == 1) / sum(res[2,] == 1)
@@ -87,7 +91,7 @@ c(x,test):
 Simulation
 ===
 
-![plot of chunk unnamed-chunk-1](bayes-figure/unnamed-chunk-1-1.png)
+![plot of chunk unnamed-chunk-2](bayes-figure/unnamed-chunk-2-1.png)
 
 
 
@@ -131,7 +135,7 @@ Distribution of AVG
 ===
 This is for all players (>500 AB) 2010, 2011, 2012
 
-<img src="bayes-figure/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
+<img src="bayes-figure/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
 
 Average is about 275 and SD is about 27
 ====
@@ -158,7 +162,7 @@ Source: local data frame [4 x 3]
 And the distribution appears Normal
 ====
 
-<img src="bayes-figure/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
+<img src="bayes-figure/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
 
 
 Hierarchical Model

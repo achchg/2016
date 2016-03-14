@@ -66,6 +66,8 @@ Assessment: Write a Monte Carlo simulation that shows this. Let's go step-by-ste
 * Repeat 10,000
 * Compute TP / P = TP / (TP +FP)
 
+
+```{r}
 B = 1000000
 res = replicate(B,{
 x = sample(c(0,1),1, replace = T, prob = c(1-1/4000, 1/4000))
@@ -73,6 +75,7 @@ test = sample(c(1-x, x), 1, replace = TRUE, prob = c(0.01 , 0.99))
 c(x,test)
 } 
 )
+```
 
 table(res[1,], res[2,])
 sum(res[2,] == 1 & res[1,] == 1) / sum(res[2,] == 1)
