@@ -1,6 +1,6 @@
 ---
-title: "Homework 2: The Big Short"
-output: html_document
+title: 'Homework 2: The Big Short'
+output: pdf_document
 ---
  
 **This homework is due Sunday February 26, 2016 at 5:00 PM. When complete, submit your code in the R Markdown file and the knitted HTML via GitHub.**
@@ -202,7 +202,7 @@ Note that the probability of losing money is quite high. To what value would you
 Hint: Use the following short cut. If $p$ fraction of a box are $a$s and $(1-p)$ are $b$s then , then the SD of the list if $\mid a-b \mid \sqrt{p(1-p)}$ 
 
 Solution: 
-Let $x=180000r$ be the earnings we make per loan at an interest rate of $r$ and $l=120000$ the loss resulting from a foreclosure. The _box_ in our box model has an expected value of $\mu = x (1-p) - l p + $ with  $p$ the probability of default. The standard error is $\sigma=(x + l) \sqrt{p(1-p)}$. We now that the sum $S$ of the $N=$ 1,000 outcomes is approximately normal with expected value $N\mu$ and standard error $\sqrt{N}\sigma$. 
+Let $x=180000r$ be the earnings we make per loan at an interest rate of $r$ and $l=120000$ the loss resulting from a foreclosure. The _box_ in our box model has an expected value of $\mu = x (1-p) - l p +$ with  $p$ the probability of default. The standard error is $\sigma=(x + l) \sqrt{p(1-p)}$. We now that the sum $S$ of the $N=$ 1,000 outcomes is approximately normal with expected value $N\mu$ and standard error $\sqrt{N}\sigma$. 
 
 $$\mbox{Pr}(S<0) = 0.001$$
 
