@@ -243,7 +243,7 @@ $$
 The standard deviation of the _conditional_ distribution described above is:
 
 $$
-\mbox{Var}(Y \mid X=x ) \sqrt{1-\rho^2} \sigma_y
+\mbox{Var}(Y \mid X=x ) = ({1-\rho^2}) \sigma_y^2
 $$
 
 This is where statements like $X$ explains $\rho^2 \times 100$ % of the variation in $Y$: the variance of $Y$ is $\sigma^2$ and, once we condition, it goes down to $(1-\rho^2) \sigma^2_Y$ . It is important to remember that the "variance explained" statement only makes sense when the data is approximated by a bivariate normal distribution.
@@ -281,7 +281,7 @@ $$ X_i = \gamma_0 + \gamma_1 y_i + \delta, i=1,\dots,N $$
 
 A few important observations:
 
-1. We use $\gamma$ instead of $\beta$ and $\delta$ instead of $\epislon$ because this is a different model. We can't solve the first equation to get the second because $\varepsilon$ is a random variable. 
+1. We use $\gamma$ instead of $\beta$ and $\delta$ instead of $\epsilon$ because this is a different model. We can't solve the first equation to get the second because $\varepsilon$ is a random variable. 
 
 Note that the regression lines are different:
 
