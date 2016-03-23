@@ -528,7 +528,7 @@ res %>%
 
 # or
 res <- summary(fit)
-res$coef[2,1] + c(-1,1)*qt(0.975)*res$coef[2,2]
+res$coef[2,1] + c(-1,1)*qt(0.975, 28)*res$coef[2,2]
 ```
 
 
