@@ -15,7 +15,7 @@ opts_chunk$set(message = FALSE)
 Install it with:
 
 ```{r}
-install.packages("broom")
+# install.packages("broom")
 ```
 
 I'll start by listing some worthwhile resources for dplyr and broom:

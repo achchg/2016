@@ -60,6 +60,14 @@ arrange(dat, `2013`) %>% select(-playerID)
 ### Assessment 1: http://goo.gl/forms/jcrVC3vWjT
 
 Miguel Cabrera hit 348 in 2013. Use linear regression to predict his 2014 average. Use the `broom` package to get a prediction for all players. In general how does the prediction for 2014 compare to the 2013 performance? 
+```{r}
+dat2 = rename(dat, x = `2013`, y = `2014`)
+fit = dat2 %>% 
+  do(augment(lm(y ~ x, data = .), data = .))
+fit %>%
+  filter(nameFirst == "Miguel")
+  
+```
 
 
 ## Regression Fallacy 
@@ -140,13 +148,42 @@ We can't perform this analysis on a single year, because there are not enough te
 
 Start by creating a data set with R, BB and HR for every team from 1961 to today. What is the correlation between each of the three pairs.
 
+```{r}
+Teams %>%
+  filter(yearID >= 1961 & BB+AB > 500 & !is.na(HR) & !is.na(BB)) %>% 
+  summarize(cor_R_BB = cor(R,BB), cor_R_HR = cor(R,HR), cor_BB_HR = cor(BB,HR))
+```
+
 
 #### Assessment 3: http://goo.gl/forms/NQD3X54EdK
 
 One way to eliminate the the possibility that the BB effect on runs is driven by the confounding with HR is to keep HRs fixed and then examine the relationship. Give a confidence interval for the effect of BB on R for teams with 120-130 HRs. Make a plot to see if the 
 Consider only teams from 1961 and beyond. 
+```{r}
+Teams %>%
+  filter(yearID >= 1961 & BB+AB > 500 & !is.na(HR) & !is.na(BB)) %>% 
+  filter(HR %in% seq(120,130,1)) %>%
+  group_by(HR)%>%
+  do(tidy(lm(R~BB, data = .), conf.int = T))
+
+Teams %>%
+  filter(yearID >= 1961 & BB+AB > 500 & !is.na(HR) & !is.na(BB)) %>% 
+  filter(HR %in% seq(120,130,1)) %>%
+  ggplot(aes(BB,R)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=T, col="blue")
+  
+```
+
 
 Compare to the coefficient when we don't stratify.
+```{r}
+Teams %>%
+  filter(yearID >= 1961 & BB+AB > 500 & !is.na(HR) & !is.na(BB)) %>% 
+  filter(HR %in% seq(120,130,1)) %>%
+  do(tidy(lm(R~BB, data = .), conf.int = T))
+  
+```
 
 
 #### Assessment 4: http://goo.gl/forms/Pf8bcPVUsN
@@ -165,6 +202,12 @@ table(group)
 You this idea to make a scatter plot of R versus BB for 10 HR strata. Hint: use `facet_wrap`
 
 ```{r}
+Teams %>%
+  filter(yearID >= 1961 & BB+AB > 500 & !is.na(HR) & !is.na(BB)) %>% 
+  mutate(group = cut(HR, quantile(HR, prob= seq(0,1,.1)), include.lowest = T))%>%
+  ggplot(aes(R,BB))+facet_wrap(~group)+geom_point()+geom_smooth(method = "lm", se = T, col = "blue")
+
+
 ```
 
 #### Assessment 5: http://goo.gl/forms/eqwKLzuwZF
