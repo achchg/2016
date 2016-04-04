@@ -1,0 +1,12 @@
+base
+dplyr
+ggplot2
+gganimate
+readr
+knitr
+broom
+gridExtra
+lattice
+caret
+mvtnorm
+pROC

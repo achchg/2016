@@ -249,7 +249,7 @@ To mimic an actual machine learning challenge. We will act as if we don't know t
 set.seed(5)
 trainIndex <- sample(rep(c(TRUE, FALSE),c(nrow(dat)-30,30)))
 dat <- mutate(dat, train = trainIndex) 
-x````
+```
 
 We will evaluate our approach by applying our algorithm to the test set and, only after applying the model, we will peek at the outcome and build a confusion matrix. 
 

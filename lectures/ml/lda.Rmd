@@ -1,5 +1,5 @@
 ---
-output: html_document
+output: pdf_document
 ---
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
@@ -135,7 +135,7 @@ f(x) = \mbox{Pr}(Y=1|\mathbf{X}=\mathbf{x}) = \frac{\pi p_{\mathbf{X}|Y=1}(\math
 {(1-\pi) p_{\mathbf{X}|Y=0}(x) + \pi p_{\mathbf{X}|Y=1}(x)}
 $$
 
-With QDA we assume that the distributions $p_{\mathbf{X}|Y=1}(x)}$ and $p_{\mathbf{X}|Y=0}(\mathbf{x})$ are multivariate normal. In our case we have two predictors so we assume each one is bivariate normal. This implies we need to estimate two averages, two standard deviations, and a correlation for each case $Y=1$ and $Y=0$. 
+With QDA we assume that the distributions $p_{\mathbf{X}|Y=1}(\mathbf{x})$ and $p_{\mathbf{X}|Y=0}(\mathbf{x})$ are multivariate normal. In our case we have two predictors so we assume each one is bivariate normal. This implies we need to estimate two averages, two standard deviations, and a correlation for each case $Y=1$ and $Y=0$. 
 
 This implies that we can approximate the distributions $p_{X_1,X_2|Y=1}$ and $p_{X_1, X_2|Y=0}$. We can easily estimate parameters from the data:
 

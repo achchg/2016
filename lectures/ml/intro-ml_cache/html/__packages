@@ -1,0 +1,9 @@
+base
+dplyr
+ggplot2
+readr
+knitr
+broom
+lattice
+caret
+RColorBrewer
